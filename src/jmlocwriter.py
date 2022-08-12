@@ -22,6 +22,8 @@ class JmLocWriter:
         population_name:
             String name of the population. This can be up to 20 characters long
             and cannot contain spaces.
+        population_type:
+            String JoinMap population type ('CP').
         individual_names:
             List of strings containing names of individuals. These can be up
             to 20 characters long and cannot contain whitespace characters.
@@ -40,12 +42,14 @@ class JmLocWriter:
         self,
         output_loc_filepath: str,
         population_name: str,
+        population_type: str,
         parent_a_name: str,
         parent_b_name: str,
         individual_names: List[str]
     ):
         self.output_loc_filepath = output_loc_filepath
         self.population_name = population_name
+        self.population_type = population_type
         self.individual_names = individual_names.copy()
         self.parent_a_name = parent_a_name
         self.parent_b_name = parent_b_name
@@ -91,7 +95,7 @@ class JmLocWriter:
         if self.parent_b_name in self.individual_names:
             child_count -= 1
         print(f'name = {self.population_name}', file=self.output_loc)
-        print('popt = CP', file=self.output_loc)
+        print(f'popt = {self.population_type}', file=self.output_loc)
         print('nloc = MARKER_COUNT_PLACEHOLDER', file=self.output_loc)
         print(f'nind = {child_count}', file=self.output_loc)
 

@@ -22,6 +22,13 @@ parser.add_argument(
     help="output file population name; cannot contain spaces"
 )
 parser.add_argument(
+    '--population-type', '-t',
+    required=True,
+    default=None,
+    type=str,
+    help="population type (supported: CP)"
+)
+parser.add_argument(
     '--parent-a', '-a',
     required=True,
     default=None,
@@ -82,6 +89,7 @@ with GbsVcfReader(args.input_vcf) as invcf, \
      JmLocWriter(
         args.output_loc,
         args.name,
+        args.population_type,
         args.parent_a,
         args.parent_b,
         invcf.sample_names
