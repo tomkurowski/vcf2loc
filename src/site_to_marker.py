@@ -16,6 +16,8 @@ def site_to_marker(
     """Create and return a JmMarker object based on a VariantSite object.
 
     The first identifier from the site ID field is used as the marker name.
+    If no identifiers are present (i.e. the ID field is '.'), the values of
+    the CHROM and POS, separated by an underscore, are used for the marker name.
 
     Args:
         site:
@@ -45,10 +47,16 @@ def site_to_marker(
         keep_invalid_calls
     )
     return JmMarker(
-        marker_name=site.ids[0],
+        marker_name=_generate_marker_name(site),
         genotype_codes=genotype_codes,
         segregation_type=segregation_type
     )
+
+
+def _generate_marker_name(site: VariantSite) -> str:
+    if site.ids[0] != '.':
+        return site.ids[0]
+    return '_'.join([site.chrom, str(site.pos)])
 
 
 def _get_segregation_type(genotype_parent_a: str, genotype_parent_b: str):
