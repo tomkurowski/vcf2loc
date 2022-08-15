@@ -13,7 +13,12 @@ parser = argparse.ArgumentParser(
 based on vcf output from a GBS pipeline."""
 )
 parser.add_argument('input_vcf', type=str, help="input GBS vcf file")
-parser.add_argument('output_loc', type=str, help="output JoinMap loc file")
+parser.add_argument(
+    '--output-loc', '-o',
+    required=True,
+    type=str,
+    help="output JoinMap loc file"
+)
 parser.add_argument(
     '--name',
     required=False,
