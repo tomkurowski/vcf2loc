@@ -9,6 +9,46 @@ from src.jmmarker import JmMarker
 _HOM_GENOTYPES = {'0/0', '1/1'}
 _HET_GENOTYPES = {'0/1', '1/0'}
 
+def is_potential_marker(
+    site: VariantSite,
+    population_type: str,
+    parent_a: str,
+    parent_b: str
+):
+    """Check if the site can serve as a marker based on parental variation.
+
+    To serve as a useful marker, each of the parents needs to have one of a
+    set of known genotype calls at the site.
+
+    For the CP population type, at least one of the parents must have
+    a heterozygous genotype, while the other can have either a homozygous or
+    a heterozygous genotype. For other population types, both parents must have
+    homozygous genotypes for different alleles.
+
+    Args:
+        site:
+            VariantSite object generated based on a row of a VCF file.
+        population_type:
+            String JoinMap population type.
+        parent_a:
+            String name of first parent.
+        parent_b:
+            String name of second parent.
+    """
+    parent_a_gt = site.genotype_calls[parent_a]['GT']
+    parent_b_gt = site.genotype_calls[parent_b]['GT']
+    if population_type == 'CP':
+        return (
+            (parent_a_gt in _HET_GENOTYPES and parent_b_gt in _HET_GENOTYPES)
+            or (parent_a_gt in _HOM_GENOTYPES and parent_b_gt in _HET_GENOTYPES)
+            or (parent_a_gt in _HET_GENOTYPES and parent_b_gt in _HOM_GENOTYPES)
+        )
+    return (
+        parent_a_gt != parent_b_gt
+        and parent_a_gt in _HOM_GENOTYPES
+        and parent_b_gt in _HOM_GENOTYPES
+    )
+
 
 def site_to_marker(
     site: VariantSite,

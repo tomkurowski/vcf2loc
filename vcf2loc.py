@@ -5,7 +5,7 @@ import argparse
 
 from src import GbsVcfReader
 from src import JmLocWriter
-from src import site_to_marker
+from src import site_to_marker, is_potential_marker
 
 
 parser = argparse.ArgumentParser(
@@ -119,6 +119,11 @@ with GbsVcfReader(args.input_vcf) as invcf, \
             if child_dp < args.min_dp:
                 # Skipping sites with low depth.
                 continue
+        if not is_potential_marker(
+            site, args.population_type, args.parent_a, args.parent_b
+        ):
+            # Skipping sites which cannot serve as markers.
+            continue
         marker = site_to_marker(
             site,
             args.population_type,
