@@ -41,22 +41,35 @@ def site_to_marker(
         sample_name: site.genotype_calls[sample_name]['GT']
         for sample_name in site.genotype_calls.keys()
     }
-    segregation_type = _get_segregation_type(
-        genotypes[parent_a], genotypes[parent_b]
-    )
-    genotype_codes = _convert_genotypes_cp(
-        segregation_type,
+    if population_type == 'CP':
+        segregation_type = _get_segregation_type(
+            genotypes[parent_a], genotypes[parent_b]
+        )
+        genotype_codes = _convert_genotypes_cp(
+            segregation_type,
+            genotypes,
+            parent_a,
+            parent_b,
+            site.sample_names,
+            keep_invalid_calls
+        )
+        return JmMarker(
+            marker_name=_generate_marker_name(site),
+            genotype_codes=genotype_codes,
+            population_type=population_type,
+            segregation_type=segregation_type
+        )
+    # Generic approach for other population types.
+    genotype_codes = _convert_genotypes(
         genotypes,
         parent_a,
         parent_b,
-        site.sample_names,
-        keep_invalid_calls
+        site.sample_names
     )
     return JmMarker(
         marker_name=_generate_marker_name(site),
         genotype_codes=genotype_codes,
         population_type=population_type,
-        segregation_type=segregation_type
     )
 
 
@@ -85,6 +98,39 @@ def _get_segregation_type(genotype_parent_a: str, genotype_parent_b: str):
     else:
         segregation_type = 'invalid'
     return segregation_type
+
+
+def _convert_genotypes(
+    genotypes: Dict[str, str],
+    parent_a: str,
+    parent_b: str,
+    sample_names: List[str]
+):
+    return {
+        sample_name: _convert_genotype(
+            genotypes[sample_name],
+            genotypes[parent_a],
+            genotypes[parent_b]
+        )
+        for sample_name in sample_names
+        if sample_name not in [parent_a, parent_b]
+    }
+
+
+def _convert_genotype(
+    genotype: str,
+    parent_a_genotype: str,
+    parent_b_genotype: str
+):
+    genotype_code = '-'
+    if genotype in _HOM_GENOTYPES:
+        if genotype == parent_a_genotype:
+            genotype_code = 'a'
+        elif genotype == parent_b_genotype:
+            genotype_code = 'b'
+    elif genotype in _HET_GENOTYPES:
+        genotype_code = 'h'
+    return genotype_code
 
 
 def _convert_genotypes_cp(
