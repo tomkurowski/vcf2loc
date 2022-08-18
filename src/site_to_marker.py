@@ -44,7 +44,7 @@ def site_to_marker(
     segregation_type = _get_segregation_type(
         genotypes[parent_a], genotypes[parent_b]
     )
-    genotype_codes = _convert_genotypes(
+    genotype_codes = _convert_genotypes_cp(
         segregation_type,
         genotypes,
         parent_a,
@@ -87,7 +87,7 @@ def _get_segregation_type(genotype_parent_a: str, genotype_parent_b: str):
     return segregation_type
 
 
-def _convert_genotypes(
+def _convert_genotypes_cp(
     segregation_type: str,
     genotypes: Dict[str, str],
     parent_a: str,
@@ -96,7 +96,7 @@ def _convert_genotypes(
     keep_invalid_calls: bool
 ):
     return {
-        sample_name: _convert_genotype(
+        sample_name: _convert_genotype_cp(
             segregation_type,
             genotypes[sample_name],
             genotypes[parent_a],
@@ -108,7 +108,7 @@ def _convert_genotypes(
     }
 
 
-def _convert_genotype(
+def _convert_genotype_cp(
     segregation_type: str,
     genotype: str,
     parent_a_genotype: str,
