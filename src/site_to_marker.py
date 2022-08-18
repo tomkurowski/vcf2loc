@@ -6,8 +6,8 @@ from typing import Dict, List
 from src.variantsite import VariantSite
 from src.jmmarker import JmMarker
 
-_HOM_GENOTYPES = ['0/0', '1/1']
-_HET_GENOTYPES = ['0/1', '1/0']
+_HOM_GENOTYPES = {'0/0', '1/1'}
+_HET_GENOTYPES = {'0/1', '1/0'}
 
 
 def site_to_marker(
