@@ -106,10 +106,6 @@ with GbsVcfReader(args.input_vcf) as invcf, \
         if args.snvs and site.has_only_snvs():
             # Keeping only SNV sites.
             continue
-        if (site.genotype_calls[args.parent_a]['GT'] == './.'
-            or site.genotype_calls[args.parent_b]['GT'] == './.'):
-            # Skipping sites without a call for either parent.
-            continue
         if args.min_dp is not None:
             child_dp = (
                 site.depth
