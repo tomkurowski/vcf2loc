@@ -31,7 +31,7 @@ parser.add_argument(
     required=True,
     default=None,
     type=str,
-    help="population type (supported: CP)"
+    help="population type (supported: CP, F2)"
 )
 parser.add_argument(
     '--parent-a', '-a',

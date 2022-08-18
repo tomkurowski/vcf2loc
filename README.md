@@ -38,7 +38,7 @@ optional arguments:
                         output JoinMap loc file
   --name NAME           output file population name; cannot contain spaces
   --population-type POPULATION_TYPE, -t POPULATION_TYPE
-                        population type (supported: CP)
+                        population type (supported: CP, F2)
   --parent-a PARENT_A, -a PARENT_A
                         first parent sample name
   --parent-b PARENT_B, -b PARENT_B

@@ -7,7 +7,7 @@ from typing import List
 
 from src.jmmarker import JmMarker
 
-SUPPORTED_POPULATION_TYPES = ['CP']
+SUPPORTED_POPULATION_TYPES = {'CP', 'F2'}
 
 
 class JmLocWriter:
