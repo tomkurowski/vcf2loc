@@ -14,6 +14,8 @@ class JmMarker:
         genotype_codes:
             Dictionary of JoinMap genotype codes. The keys are individual names,
             and the values are genotype codes.
+        population_type:
+            String JoinMap population type.
         segregation_type:
             String segregation type for CP population. These can be '<lmxll>',
             '<nnxnp>', or '<hkxhk>'. The '<abxcd>' and '<efxeg>' types are
@@ -22,6 +24,7 @@ class JmMarker:
 
     marker_name: str
     genotype_codes: Dict[str, str]
+    population_type: str
     segregation_type: Optional[str] = None
 
     @property

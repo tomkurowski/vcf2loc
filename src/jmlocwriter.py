@@ -25,7 +25,7 @@ class JmLocWriter:
             String name of the population. This can be up to 20 characters long
             and cannot contain spaces.
         population_type:
-            String JoinMap population type ('CP').
+            String JoinMap population type.
         individual_names:
             List of strings containing names of individuals. These can be up
             to 20 characters long and cannot contain whitespace characters.

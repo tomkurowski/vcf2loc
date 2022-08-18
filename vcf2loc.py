@@ -120,7 +120,11 @@ with GbsVcfReader(args.input_vcf) as invcf, \
                 # Skipping sites with low depth.
                 continue
         marker = site_to_marker(
-            site, args.parent_a, args.parent_b, args.keep_invalid_calls
+            site,
+            args.population_type,
+            args.parent_a,
+            args.parent_b,
+            args.keep_invalid_calls
         )
         if marker.unknown_fraction > args.u_threshold:
             # Skipping sites with too many unknown genotypes.

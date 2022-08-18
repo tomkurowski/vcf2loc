@@ -11,7 +11,11 @@ _HET_GENOTYPES = {'0/1', '1/0'}
 
 
 def site_to_marker(
-    site: VariantSite, parent_a: str, parent_b: str, keep_invalid_calls: bool
+    site: VariantSite,
+    population_type: str,
+    parent_a: str,
+    parent_b: str,
+    keep_invalid_calls: bool
 ) -> JmMarker:
     """Create and return a JmMarker object based on a VariantSite object.
 
@@ -22,6 +26,8 @@ def site_to_marker(
     Args:
         site:
             VariantSite object generated based on a row of a VCF file.
+        population_type:
+            String JoinMap population type.
         parent_a:
             String name of first parent.
         parent_b:
@@ -49,6 +55,7 @@ def site_to_marker(
     return JmMarker(
         marker_name=_generate_marker_name(site),
         genotype_codes=genotype_codes,
+        population_type=population_type,
         segregation_type=segregation_type
     )
 
