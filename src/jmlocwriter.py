@@ -7,6 +7,8 @@ from typing import List
 
 from src.jmmarker import JmMarker
 
+SUPPORTED_POPULATION_TYPES = ['CP']
+
 
 class JmLocWriter:
     """Opens a JoinMap locus genotype file and writes to it.
@@ -54,6 +56,7 @@ class JmLocWriter:
         self.parent_a_name = parent_a_name
         self.parent_b_name = parent_b_name
         self.marker_count = 0
+        self._validate_population_type(population_type)
         self.output_loc = open(self.output_loc_filepath, 'w', encoding='utf-8')
         self._write_loc_header()
 
@@ -138,3 +141,7 @@ class JmLocWriter:
             sys.exit(
                 "Error: Population name cannot contain whitespace characters."
             )
+
+    def _validate_population_type(self, population_type: str):
+        if population_type not in SUPPORTED_POPULATION_TYPES:
+            sys.exit(f"Error: Unsupported population type '{population_type}'.")
