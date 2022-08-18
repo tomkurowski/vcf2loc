@@ -1,7 +1,7 @@
 """JoinMap marker data storage class.
 """
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, Optional
 
 
 @dataclass
@@ -22,7 +22,7 @@ class JmMarker:
 
     marker_name: str
     genotype_codes: Dict[str, str]
-    segregation_type: str
+    segregation_type: Optional[str] = None
 
     @property
     def known_count(self) -> int:

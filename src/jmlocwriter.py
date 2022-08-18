@@ -78,10 +78,13 @@ class JmLocWriter:
         Args:
             marker: JmMarker object.
         """
-        print(
-            ' '.join([marker.marker_name, marker.segregation_type]),
-            file=self.output_loc
-        )
+        if marker.segregation_type is None:
+            print(marker.marker_name, file=self.output_loc)
+        else:
+            print(
+                ' '.join([marker.marker_name, marker.segregation_type]),
+                file=self.output_loc
+            )
         ordered_gts = [
             marker.genotype_codes[name] for name in self.individual_names
             if name not in [self.parent_a_name, self.parent_b_name]
