@@ -7,7 +7,12 @@ from typing import List
 
 from src.jmmarker import JmMarker
 
-SUPPORTED_POPULATION_TYPES = {'CP', 'F2'}
+SUPPORTED_POPULATION_TYPES = {'CP', 'F2', 'RIx'}
+_POPULATION_TYPES_REGEX = SUPPORTED_POPULATION_TYPES.copy()
+
+# RIx: 2 <= x <= 99
+_POPULATION_TYPES_REGEX.remove('RIx')
+_POPULATION_TYPES_REGEX.add('RI([2-9]|[1-9][0-9])$')
 
 
 class JmLocWriter:
@@ -146,5 +151,11 @@ class JmLocWriter:
             )
 
     def _validate_population_type(self, population_type: str):
-        if population_type not in SUPPORTED_POPULATION_TYPES:
-            sys.exit(f"Error: Unsupported population type '{population_type}'.")
+        if any(
+            re.match(regex, population_type)
+            for regex in _POPULATION_TYPES_REGEX
+        ):
+            # Population type matched, validation complete.
+            return
+        # No population type matched
+        sys.exit(f"Error: Unsupported population type '{population_type}'.")
