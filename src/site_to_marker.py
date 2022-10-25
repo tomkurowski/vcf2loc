@@ -1,7 +1,7 @@
 """Functions for generating a JmMarker object based on a VariantSite object.
 """
 
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from src.variantsite import VariantSite
 from src.jmmarker import JmMarker
@@ -20,10 +20,14 @@ def is_potential_marker(
     To serve as a useful marker, each of the parents needs to have one of a
     set of known genotype calls at the site.
 
+    For the F2 and RIx population types, if both parents have a genotype call at
+    the site, both calls have to be homozygous for different alleles. If only
+    parent A has a genotype call, it has to be homozygous and at least one
+    genotype call in the population has to be different from the parent A call.
+
     For the CP population type, at least one of the parents must have
     a heterozygous genotype, while the other can have either a homozygous or
-    a heterozygous genotype. For other population types, both parents must have
-    homozygous genotypes for different alleles.
+    a heterozygous genotype.
 
     Args:
         site:
@@ -36,13 +40,27 @@ def is_potential_marker(
             String name of second parent.
     """
     parent_a_gt = site.genotype_calls[parent_a]['GT']
-    parent_b_gt = site.genotype_calls[parent_b]['GT']
     if population_type == 'CP':
+        parent_b_gt = site.genotype_calls[parent_b]['GT']
         return (
             (parent_a_gt in _HET_GENOTYPES and parent_b_gt in _HET_GENOTYPES)
             or (parent_a_gt in _HOM_GENOTYPES and parent_b_gt in _HET_GENOTYPES)
             or (parent_a_gt in _HET_GENOTYPES and parent_b_gt in _HOM_GENOTYPES)
         )
+    # If parent B was not provided, check if A is homozygous
+    # and not identical to all other known samples.
+    if parent_b is None:
+        if parent_a_gt not in _HOM_GENOTYPES:
+            return False
+        gt_identical_to_parent_a = [
+            site.genotype_calls[sample_name]['GT'] in { parent_a_gt, './.' }
+            for sample_name in site.genotype_calls.keys()
+        ]
+        if all(gt_identical_to_parent_a):
+            return False
+        return True
+    # Both parents were provided, check if they are homozygous and different
+    parent_b_gt = site.genotype_calls[parent_b]['GT']
     return (
         parent_a_gt != parent_b_gt
         and parent_a_gt in _HOM_GENOTYPES
@@ -143,14 +161,14 @@ def _get_segregation_type(genotype_parent_a: str, genotype_parent_b: str):
 def _convert_genotypes(
     genotypes: Dict[str, str],
     parent_a: str,
-    parent_b: str,
+    parent_b: Union[str, None],
     sample_names: List[str]
 ):
     return {
         sample_name: _convert_genotype(
             genotypes[sample_name],
             genotypes[parent_a],
-            genotypes[parent_b]
+            None if parent_b is None else genotypes[parent_b]
         )
         for sample_name in sample_names
         if sample_name not in [parent_a, parent_b]
@@ -160,13 +178,13 @@ def _convert_genotypes(
 def _convert_genotype(
     genotype: str,
     parent_a_genotype: str,
-    parent_b_genotype: str
+    parent_b_genotype: Union[str, None]
 ):
     genotype_code = '-'
     if genotype in _HOM_GENOTYPES:
         if genotype == parent_a_genotype:
             genotype_code = 'a'
-        elif genotype == parent_b_genotype:
+        elif genotype == parent_b_genotype or parent_b_genotype is None:
             genotype_code = 'b'
     elif genotype in _HET_GENOTYPES:
         genotype_code = 'h'

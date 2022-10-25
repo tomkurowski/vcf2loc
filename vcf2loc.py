@@ -112,7 +112,8 @@ with GbsVcfReader(args.input_vcf) as invcf, \
             child_dp = (
                 site.depth
                 - site.genotype_calls[args.parent_a]['DP']
-                - site.genotype_calls[args.parent_b]['DP']
+                - 0 if args.parent_b is None
+                  else site.genotype_calls[args.parent_a]['DP']
             )
             if child_dp < args.min_dp:
                 # Skipping sites with low depth.
