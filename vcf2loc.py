@@ -42,10 +42,9 @@ parser.add_argument(
 )
 parser.add_argument(
     '--parent-b', '-b',
-    required=True,
     default=None,
     type=str,
-    help="second parent sample name"
+    help="second parent sample name (optional except for CP population type)"
 )
 parser.add_argument(
     '--snvs',
@@ -89,6 +88,9 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
+
+if args.population_type == 'CP' and args.parent_b is None:
+    parser.error("--parent-b / -b is required when using CP population type")
 
 with GbsVcfReader(args.input_vcf) as invcf, \
      JmLocWriter(
