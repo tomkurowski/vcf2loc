@@ -109,11 +109,14 @@ with GbsVcfReader(args.input_vcf) as invcf, \
             # Keeping only SNV sites.
             continue
         if args.min_dp is not None:
+            parent_b_dp = (
+                0 if args.parent_b is None
+                else site.genotype_calls[args.parent_a]['DP']
+            )
             child_dp = (
                 site.depth
                 - site.genotype_calls[args.parent_a]['DP']
-                - 0 if args.parent_b is None
-                  else site.genotype_calls[args.parent_a]['DP']
+                - parent_b_dp
             )
             if child_dp < args.min_dp:
                 # Skipping sites with low depth.
