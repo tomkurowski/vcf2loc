@@ -6,6 +6,7 @@ import argparse
 from src import GbsVcfReader
 from src import JmLocWriter
 from src import site_to_marker, is_potential_marker
+from src import natural_sort_key
 
 
 parser = argparse.ArgumentParser(
@@ -86,6 +87,13 @@ parser.add_argument(
     default=False,
     help="keep calls which could not result from the parental genotypes"
 )
+parser.add_argument(
+    '--natural-sort',
+    required=False,
+    action='store_true',
+    default=False,
+    help="apply a natural ordering to the individual names"
+)
 
 args = parser.parse_args()
 
@@ -99,7 +107,8 @@ with GbsVcfReader(args.input_vcf) as invcf, \
         args.population_type,
         args.parent_a,
         args.parent_b,
-        invcf.sample_names
+        sorted(invcf.sample_names, key=natural_sort_key)
+        if args.natural_sort else invcf.sample_names
     ) as outloc:
     for site in invcf:
         if len(site.alts) > 1:
