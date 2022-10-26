@@ -9,12 +9,16 @@ Currently supports the CP, F2, and RIx population types. Multiallelic sites are 
 The script requires Python 3.7 or higher. No installation or dependencies outside the Python standard library are required.
 
 ## Usage
+
 You can run the vcf2loc.py script file directly:
-```
+
+```sh
 ./vcf2loc.py -t CP -a PARENT_A -b PARENT_B -o gbs_output.loc gbs_input.vcf
 ```
+
 Or (particularly on Windows):
-```
+
+```sh
 python vcf2loc.py -t CP -a PARENT_A -b PARENT_B -o gbs_output.loc gbs_input.vcf
 ```
 
@@ -23,8 +27,8 @@ As in the above example, you need to provide the script with the type of populat
 You can view a help message, which details these and other (optional) arguments, through ```./vcf2loc.py --help``` or ```python vcf2loc.py --help```.
 
 ```
-usage: vcf2loc.py [-h] --output-loc OUTPUT_LOC [--name NAME] --population-type POPULATION_TYPE --parent-a PARENT_A --parent-b PARENT_B [--snvs] [--min-dp MIN_DP] [--u-threshold U_THRESHOLD]
-                  [--het-threshold HET_THRESHOLD] [--hom-threshold HOM_THRESHOLD] [--keep-invalid-calls]
+usage: vcf2loc.py [-h] --output-loc OUTPUT_LOC [--name NAME] --population-type POPULATION_TYPE --parent-a PARENT_A [--parent-b PARENT_B] [--snvs] [--min-dp MIN_DP] [--u-threshold U_THRESHOLD]
+                  [--het-threshold HET_THRESHOLD] [--hom-threshold HOM_THRESHOLD] [--keep-invalid-calls] [--natural-sort]
                   input_vcf
 
 Generate JoinMap loc file based on vcf output from a GBS pipeline.
@@ -32,17 +36,17 @@ Generate JoinMap loc file based on vcf output from a GBS pipeline.
 positional arguments:
   input_vcf             input GBS vcf file
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   --output-loc OUTPUT_LOC, -o OUTPUT_LOC
                         output JoinMap loc file
   --name NAME           output file population name; cannot contain spaces
   --population-type POPULATION_TYPE, -t POPULATION_TYPE
-                        population type (supported: CP, F2, RIx, where 2 <= x <= 99)
+                        population type (supported: CP, F2, RIx)
   --parent-a PARENT_A, -a PARENT_A
                         first parent sample name
   --parent-b PARENT_B, -b PARENT_B
-                        second parent sample name
+                        second parent sample name (optional except for CP population type)
   --snvs                use only SNV sites
   --min-dp MIN_DP       minimum DP (total depth, excluding parents) threshold for site
   --u-threshold U_THRESHOLD
@@ -52,6 +56,7 @@ optional arguments:
   --hom-threshold HOM_THRESHOLD
                         maximum fraction (among known calls) of homozygous calls per site
   --keep-invalid-calls  keep calls which could not result from the parental genotypes
+  --natural-sort        apply a natural ordering to the individual names
 ```
 
 ## Supported population type codes
@@ -64,7 +69,6 @@ Type code|Description
 ```F2``` | an F2 population: the result of selfing the F1 of a cross between two fully homozygous diploid parents
 ```RIx``` | a population of recombinant inbred lines in the x-th generation: the result of selfing an F2 with single seed descent; ```x``` must be specified: 2 <= ```x``` <= 99, ```RI2``` is equivalent to ```F2```
 
-
-
 ## Support & Contact information
+
 Author & maintainer (Tomasz Kurowski): [t.j.kurowski@cranfield.ac.uk](mailto:t.j.kurowski@cranfield.ac.uk)
