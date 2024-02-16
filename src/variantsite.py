@@ -50,8 +50,8 @@ class VariantSite:
             depth = parsed_info['DP']
         else:
             for call in self.genotype_calls.values():
-                if 'DP' in call:
-                    depth += call['DP']
+                if 'DP' in call and call['DP'] != '.':
+                    depth += int(call['DP'])
         return depth
 
     def _parse_genotype_field(self, call: str, genotype_format: List[str]):
@@ -75,8 +75,6 @@ class VariantSite:
             field: value
             for field, value in zip(genotype_format, call.split(':'))
         }
-        if 'DP' in parsed_call:
-            parsed_call['DP'] = int(parsed_call['DP'])
         if 'GQ' in parsed_call:
             parsed_call['GQ'] = int(parsed_call['GQ'])
         return parsed_call
