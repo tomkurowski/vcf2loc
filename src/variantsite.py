@@ -75,8 +75,6 @@ class VariantSite:
             field: value
             for field, value in zip(genotype_format, call.split(':'))
         }
-        if 'GQ' in parsed_call:
-            parsed_call['GQ'] = int(parsed_call['GQ'])
         return parsed_call
 
     def _parse_info(self, info: str):
